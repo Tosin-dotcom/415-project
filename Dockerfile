@@ -1,4 +1,4 @@
-# Use official PHP image with necessary extensions
+# Base PHP Image
 FROM php:8.2-fpm
 
 # Set working directory
@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     curl \
     git \
+    nginx \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd pdo pdo_mysql
 
@@ -29,8 +30,11 @@ RUN composer install --no-dev --optimize-autoloader
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Expose port
-EXPOSE 9000
+# Copy Nginx config
+COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 
-# Start PHP-FPM
-CMD ["php-fpm"]
+# Expose port 80 for HTTP traffic
+EXPOSE 80
+
+# Start services (Nginx + PHP-FPM)
+CMD service nginx start && php-fpm
