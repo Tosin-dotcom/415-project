@@ -12,7 +12,11 @@ class LoanPayment extends Model
     protected $fillable = [
         'loan_id',
         'customer_name',
-        'amount_paid'
+        'amount_paid',
+        'payment_date',
+        'due_date',
+        'status',
+        'balance'
     ];
 
     public function loan()

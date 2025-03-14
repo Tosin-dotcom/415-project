@@ -31,4 +31,37 @@ class LoanRepository
         $loan->update($data);
         return $loan;
     }
+
+    public function getDistinctCustomerNamesByUser($userId)
+    {
+        return Loan::where('user_id', $userId)
+                    ->distinct()
+                    ->pluck('customer_name');
+    }
+
+    public function getTotalLoans($userId)
+    {
+        return Loan::where('user_id', $userId)->count();
+    }
+
+    public function getActiveLoans($userId)
+    {
+        return Loan::where('user_id', $userId)
+                    ->where('status', 'ongoing')
+                    ->count();
+    }
+
+    public function getRecentLoans($userId)
+    {
+        return Loan::where('user_id', $userId)
+                    ->orderBy('updated_at', 'desc') 
+                    ->take(2)
+                    ->get();
+    }
+
+    public function getTotalLoansGiven($userId)
+    {
+        return Loan::where('user_id', $userId)->sum('amount');
+    }
+
 }

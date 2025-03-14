@@ -32,24 +32,65 @@ class LoanController extends Controller
         ], 201);
     }
 
-    public function index()
+    public function index($userId)
     {
-        $loans = $this->loanService->getUserLoans(Auth::id());
+        $loans = $this->loanService->getUserLoans($userId);
 
         return response()->json([
             'data' => $loans
         ]);
     }
 
+
     public function makePayment(Request $request, $loanId)
     {
         $validated = $request->validate([
             'amount_paid' => 'required|numeric|min:1',
+            'payment_date' => 'required|date',
         ]);
 
-        $loan = $this->loanService->recordPayment($loanId, $validated['amount_paid']);
+        $loan = $this->loanService->recordPayment($loanId, $validated['amount_paid'], $validated['payment_date']);
 
         return response()->json(['message' => 'Payment recorded successfully', 'loan' => $loan]);
     }
+
+    public function getDistinctCustomerNames($userId)
+    {
+
+        $customerNames = $this->loanService->getCustomerNamesByUserId($userId);
+        return response()->json([
+            'data' => $customerNames
+        ], 200);
+    }
+
+
+    public function getPaymentsByUser($userId)
+    {
+        $payments = $this->loanService->getPaymentsByUser($userId);
+        return response()->json([
+            'data' => $payments
+        ], 200);
+    }
+
+    public function getLoanHistory($loanId)
+    {
+        $result = $this->loanService->getLoanHistory($loanId);
+
+        return response()->json([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+
+    public function getDashboardData($userId)
+    {
+        $dashboardData = $this->loanService->getDashboardData($userId);
+
+        return response()->json([
+            'success' => true,
+            'data' => $dashboardData
+        ]);
+    }
+
 
 }
