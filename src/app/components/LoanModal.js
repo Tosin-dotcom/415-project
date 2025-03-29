@@ -14,7 +14,7 @@ export default function LoanModal({ isOpen, onClose }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const API_URL = "https://415-project.fly.dev";
+  const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const api = axios.create({
     baseURL: API_URL,
@@ -286,7 +286,7 @@ export default function LoanModal({ isOpen, onClose }) {
                     </label>
                     <div className="mt-1 relative rounded-md shadow-sm">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <span className="text-gray-500 sm:text-sm">#</span>
+                        <span className="text-gray-500 sm:text-sm">₦</span>
                       </div>
                       <input
                         type="number"
@@ -359,7 +359,7 @@ export default function LoanModal({ isOpen, onClose }) {
                   <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
                     <div className="text-gray-500">Principal amount:</div>
                     <div className="text-gray-900 font-medium">
-                      ${Number(formData.amount).toLocaleString()}
+                    ₦{Number(formData.amount).toLocaleString()}
                     </div>
 
                     <div className="text-gray-500">Interest rate:</div>
@@ -369,7 +369,7 @@ export default function LoanModal({ isOpen, onClose }) {
 
                     <div className="text-gray-500">Interest amount:</div>
                     <div className="text-gray-900 font-medium">
-                      $
+                    ₦
                       {(
                         Number(formData.amount) *
                         (formData.repaymentPlan === "6" ? 0.1 : 0.15)
@@ -378,7 +378,7 @@ export default function LoanModal({ isOpen, onClose }) {
 
                     <div className="text-gray-500">Total repayment:</div>
                     <div className="text-gray-900 font-medium">
-                      $
+                    ₦
                       {(
                         Number(formData.amount) *
                         (1 + (formData.repaymentPlan === "6" ? 0.1 : 0.15))
@@ -387,7 +387,7 @@ export default function LoanModal({ isOpen, onClose }) {
 
                     <div className="text-gray-500">Monthly payment:</div>
                     <div className="text-gray-900 font-medium">
-                      $
+                    ₦
                       {(
                         (Number(formData.amount) *
                           (1 + (formData.repaymentPlan === "6" ? 0.1 : 0.15))) /

@@ -1,10 +1,9 @@
-// File: app/api/dashboard/route.js
+
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    // In a real application, you would fetch this data from your database
-    // This is mock data for demonstration purposes
+  
     const dashboardData = {
       totalLoans: 124,
       activeLoans: 98,

@@ -13,20 +13,20 @@ export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
+  const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   axios.defaults.withCredentials = true;
   axios.defaults.withXSRFToken = true;
 
   const getCsrfCookie = async () => {
     try {
-      await axios.get("https://415-project.fly.dev/sanctum/csrf-cookie", {
+      await axios.get(`${API_URL}/sanctum/csrf-cookie`, {
         withCredentials: true,
       });
     } catch (error) {
       console.error("Failed to fetch CSRF cookie", error);
     }
   };
-
-  const API_URL = "https://415-project.fly.dev";
   const api = axios.create({
     baseURL: API_URL,
     headers: {

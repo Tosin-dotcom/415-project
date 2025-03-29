@@ -12,6 +12,8 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
+  const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   const getStatusBadgeStyle = (status) => {
     switch (status) {
       case "paid":
@@ -22,17 +24,20 @@ export default function Page() {
         return "bg-blue-100 text-blue-800";
       case "ongoing":
         return "bg-yellow-100 text-yellow-800";
+      case "overpaid":
+        return "bg-purple-100 text-purple-800"; 
       default:
         return "bg-gray-100 text-gray-800";
     }
-  };
+};
+
 
   const fetchLoans = async () => {
     setIsLoading(true);
     const userId = localStorage.getItem("userId");
     try {
       const response = await axios.get(
-        `https://415-project.fly.dev/api/loans/${userId}`
+        `${API_URL}/api/loans/${userId}`
       );
       setLoans(response.data.data);
     } catch (error) {
@@ -145,8 +150,8 @@ export default function Page() {
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm text-gray-900">#{loan.amount.toLocaleString()}</div>
-                              <div className="text-sm text-gray-500">Total: #{loan.total_amount_to_pay.toLocaleString()}</div>
+                              <div className="text-sm text-gray-900">₦{loan.amount.toLocaleString()}</div>
+                              <div className="text-sm text-gray-500">Total: ₦{loan.total_amount_to_pay.toLocaleString()}</div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="flex items-center">
@@ -159,7 +164,7 @@ export default function Page() {
                                 <span className="text-sm text-gray-500">{progressPercentage}%</span>
                               </div>
                               <div className="text-xs text-gray-500 mt-1">
-                                #{loan.total_paid.toLocaleString()} paid / #{remainingBalance.toLocaleString()} left
+                                ₦{loan.total_paid.toLocaleString()} paid / ₦{remainingBalance.toLocaleString()} left
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">

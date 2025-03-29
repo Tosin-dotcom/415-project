@@ -16,9 +16,9 @@ export default function Dashboard() {
     total_amount_collected: 0,
   });
 
+  const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   const [isLoading, setIsLoading] = useState(true);
-
-
   
   const getStatusBadgeStyle = (status) => {
     switch (status) {
@@ -30,10 +30,13 @@ export default function Dashboard() {
         return "bg-blue-100 text-blue-800";
       case "ongoing":
         return "bg-yellow-100 text-yellow-800";
+      case "overpaid":
+        return "bg-purple-100 text-purple-800"; 
       default:
         return "bg-gray-100 text-gray-800";
     }
-  }
+};
+
   
 
   useEffect(() => {
@@ -41,7 +44,7 @@ export default function Dashboard() {
     const fetchDashboardData = async () => {
       const userId = localStorage.getItem("userId");
       try {
-        const response = await axios.get(`https://415-project.fly.dev/api/dashboard/${userId}`);
+        const response = await axios.get(`${API_URL}/api/dashboard/${userId}`);
         setDashboardData(response.data.data || {});
       } catch (error) {
         console.error("Error fetching dashboard data:", error.response ? error.response.data : error.message);
@@ -89,19 +92,19 @@ export default function Dashboard() {
                 />
                 <StatCard 
                   title="Total Repayments" 
-                  value={`#${dashboardData.total_repayments ? dashboardData.total_repayments.toLocaleString() : 0}`} 
+                  value={`₦${dashboardData.total_repayments ? dashboardData.total_repayments.toLocaleString() : 0}`} 
                   icon={<FaMoneyBillWave className="text-emerald-500" size={24} />} 
                   bgColor="bg-emerald-100"
                 />
                 <StatCard 
                   title="Total Loans Given" 
-                  value={`#${dashboardData.total_loans_given.toLocaleString()}`} 
+                  value={`₦${dashboardData.total_loans_given.toLocaleString()}`} 
                   icon={<FaDollarSign className="text-yellow-500" size={24} />} 
                   bgColor="bg-yellow-100"
                 />
                 <StatCard 
                   title="Total Amount Collected" 
-                  value={`#${dashboardData.total_amount_collected.toLocaleString()}`} 
+                  value={`₦${dashboardData.total_amount_collected.toLocaleString()}`} 
                   icon={<FaHandHoldingUsd className="text-purple-500" size={24} />} 
                   bgColor="bg-purple-100"
                 />
@@ -126,7 +129,7 @@ export default function Dashboard() {
                         {dashboardData.recent_loans.map((loan) => (
                           <tr key={loan.id}>
                             <td className="px-6 py-4 whitespace-nowrap">{loan.customer_name}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">#{loan.amount.toLocaleString()}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">₦{loan.amount.toLocaleString()}</td>
                             <td className="px-6 py-4 whitespace-nowrap">{loan.repayment_plan} months</td>
                             <td className="px-6 py-4 whitespace-nowrap">{new Date(loan.start_date).toLocaleDateString()}</td>
                             <td className="px-6 py-4 whitespace-nowrap">
@@ -151,7 +154,6 @@ export default function Dashboard() {
   );
 }
 
-// Stat Card Component
 function StatCard({ title, value, icon, bgColor }) {
   return (
     <div className={`${bgColor} rounded-lg shadow-md p-6`}>

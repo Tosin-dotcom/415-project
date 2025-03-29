@@ -14,6 +14,8 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   const getStatusBadgeStyle = (status) => {
     switch (status) {
       case "paid":
@@ -33,7 +35,7 @@ export default function Page() {
     try {
       setLoading(true);
       const response = await axios.get(
-        `https://415-project.fly.dev/api/loans/history/${id}`
+        `${API_URL}/api/loans/history/${id}`
       );
       setLoanData(response.data.data.loan);
       setPaymentHistory(response.data.data.payments);
@@ -108,7 +110,7 @@ export default function Page() {
                 Loan Amount:
               </span>
               <span className="text-sm font-semibold text-gray-900">
-                #{loanData.amount.toLocaleString()}
+                ₦{loanData.amount.toLocaleString()}
               </span>
             </div>
             <div className="flex justify-between">
@@ -148,7 +150,7 @@ export default function Page() {
                 Monthly Payment:
               </span>
               <span className="text-sm font-semibold text-gray-900">
-                #{loanData.amount_per_month.toLocaleString()}
+                ₦{loanData.amount_per_month.toLocaleString()}
               </span>
             </div>
             <div className="flex justify-between">
@@ -156,7 +158,7 @@ export default function Page() {
                 Total Amount Due:
               </span>
               <span className="text-sm font-semibold text-gray-900">
-                #
+                ₦
                 {(
                   loanData.total_amount_to_pay - loanData.total_paid
                 ).toLocaleString()}
@@ -189,7 +191,7 @@ export default function Page() {
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Payment #
+                    Payment ₦
                   </th>
                   <th
                     scope="col"
@@ -243,10 +245,10 @@ export default function Page() {
                         {payment.payment_date || "-"}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        #{loanData.amount_per_month - payment.amount_paid}
+                        ₦{loanData.amount_per_month - payment.amount_paid}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        #{payment.amount_paid.toLocaleString()}
+                        ₦{payment.amount_paid.toLocaleString()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
@@ -258,7 +260,7 @@ export default function Page() {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        #{payment.balance.toLocaleString()}
+                        ₦{payment.balance.toLocaleString()}
                       </td>
                     </tr>
                   ))
@@ -281,13 +283,13 @@ export default function Page() {
               <div className="text-center">
                 <p className="text-xs text-gray-500">Total Loan Amount</p>
                 <p className="text-lg font-bold text-gray-900">
-                  #{loanData.amount.toLocaleString()}
+                  ₦{loanData.amount.toLocaleString()}
                 </p>
               </div>
               <div className="text-center">
                 <p className="text-xs text-gray-500">Total Interest</p>
                 <p className="text-lg font-bold text-gray-900">
-                  #
+                  ₦
                   {(
                     loanData.total_amount_to_pay - loanData.amount
                   ).toLocaleString()}
@@ -296,13 +298,13 @@ export default function Page() {
               <div className="text-center">
                 <p className="text-xs text-gray-500">Total Paid</p>
                 <p className="text-lg font-bold text-gray-900">
-                  #{loanData.total_paid.toLocaleString()}
+                  ₦{loanData.total_paid.toLocaleString()}
                 </p>
               </div>
               <div className="text-center">
                 <p className="text-xs text-gray-500">Outstanding Balance</p>
                 <p className="text-lg font-bold text-gray-900">
-                  #
+                  ₦
                   {(
                     loanData.total_amount_to_pay - loanData.total_paid
                   ).toLocaleString()}

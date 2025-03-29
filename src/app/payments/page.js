@@ -12,6 +12,8 @@ export default function Page() {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   useEffect(() => {
     fetchPayments();
   }, []);
@@ -27,7 +29,7 @@ export default function Page() {
 
     try {
       setLoading(true);
-      const response = await axios.get(`https://415-project.fly.dev/api/loans/payment/${userId}`);
+      const response = await axios.get(`${API_URL}/api/loans/payment/${userId}`);
       setPayments(response.data.data);
       setLoading(false);
     } catch (error) {
@@ -135,7 +137,7 @@ export default function Page() {
                               {payment.customer_name}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                              #{payment.amount_paid.toLocaleString()}
+                              ₦{payment.amount_paid.toLocaleString()}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusStyle(payment.status)}`}>

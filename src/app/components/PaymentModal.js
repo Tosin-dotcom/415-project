@@ -12,6 +12,9 @@ export default function PaymentModal({ isOpen, onClose }) {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
+  const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+  
+
   useEffect(() => {
     if (isOpen) {
       fetchLoans();
@@ -30,7 +33,7 @@ export default function PaymentModal({ isOpen, onClose }) {
     try {
       setLoading(true);
       const response = await axios.get(
-        `https://415-project.fly.dev/api/loans/${userId}`
+        `${API_URL}/api/loans/${userId}`
       );
       setLoans(response.data.data);
       setLoading(false);
@@ -42,6 +45,7 @@ export default function PaymentModal({ isOpen, onClose }) {
   };
 
   const handlePaymentSubmit = async (e) => {
+    const userId = localStorage.getItem("userId");
     e.preventDefault();
     setLoading(true);
     setError(null);
@@ -53,7 +57,7 @@ export default function PaymentModal({ isOpen, onClose }) {
     };
 
     try {
-      await axios.post(`https://415-project.fly.dev/api/loans/payment/${loadId}`, payload);
+      await axios.post(`${API_URL}/api/loans/payment/${loadId}/${userId}`, payload);
       setSuccess(true);
       setTimeout(() => {
         onClose();
@@ -114,7 +118,7 @@ export default function PaymentModal({ isOpen, onClose }) {
           </div>
         )}
 
-        {/* Form */}
+      
         <form className="mt-6 space-y-6" onSubmit={handlePaymentSubmit}>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Select Debtor</label>
@@ -128,7 +132,7 @@ export default function PaymentModal({ isOpen, onClose }) {
               <option value="">Select a debtor</option>
               {loans.map((loan) => (
                 <option key={loan.id} value={loan.id}>
-                  {loan.customer_name} (Balance: ${(loan.total_amount_to_pay - loan.total_paid).toLocaleString()})
+                  {loan.customer_name} (Balance: ₦{(loan.total_amount_to_pay - loan.total_paid).toLocaleString()})
                 </option>
               ))}
             </select>
@@ -140,16 +144,16 @@ export default function PaymentModal({ isOpen, onClose }) {
               <div className="grid grid-cols-2 gap-2 mt-2 text-sm">
                 <div>
                   <span className="text-gray-600">Total Amount:</span>
-                  <p className="font-medium">${selectedLoan.total_amount_to_pay.toLocaleString()}</p>
+                  <p className="font-medium">₦{selectedLoan.total_amount_to_pay.toLocaleString()}</p>
                 </div>
                 <div>
                   <span className="text-gray-600">Amount Paid:</span>
-                  <p className="font-medium">${selectedLoan.total_paid.toLocaleString()}</p>
+                  <p className="font-medium">₦{selectedLoan.total_paid.toLocaleString()}</p>
                 </div>
                 <div>
                   <span className="text-gray-600">Outstanding:</span>
                   <p className="font-medium text-red-600">
-                    ${(selectedLoan.total_amount_to_pay - selectedLoan.total_paid).toLocaleString()}
+                    ₦{(selectedLoan.total_amount_to_pay - selectedLoan.total_paid).toLocaleString()}
                   </p>
                 </div>
                 <div>
@@ -164,7 +168,7 @@ export default function PaymentModal({ isOpen, onClose }) {
             <label className="block text-sm font-medium text-gray-700 mb-1">Payment Amount</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <span className="text-gray-500">$</span>
+                <span className="text-gray-500">₦</span>
               </div>
               <input
                 type="number"

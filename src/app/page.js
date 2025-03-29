@@ -17,7 +17,6 @@ import dashboard from "../app/assets/images/dashboard.png";
 export default function Home() {
   return (
     <div className="font-sans text-gray-800 bg-gray-50">
-      {/* Header */}
       <header className="fixed w-full bg-white shadow-sm z-50">
         <div className="container mx-auto px-4">
           <nav className="flex justify-between items-center py-5">

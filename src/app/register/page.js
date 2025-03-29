@@ -14,12 +14,14 @@ export default function RegisterPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
+  const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   axios.defaults.withCredentials = true;
   axios.defaults.withXSRFToken = true;
 
   const getToken = async () => {
     try {
-      const response = await axios.get("https://415-project.fly.dev/token", {
+      const response = await axios.get(`${API_URL}/token`, {
         headers: { "Content-Type": "application/json" },
       });
       return response.data;
@@ -38,7 +40,7 @@ export default function RegisterPage() {
     const registerPayload = { email, name, password };
 
     try {
-      await axios.post("https://415-project.fly.dev/api/register", registerPayload, {
+      await axios.post(`${API_URL}/api/register`, registerPayload, {
         headers: {
           "Content-Type": "application/json",
           "X-CSRF-TOKEN": token,
